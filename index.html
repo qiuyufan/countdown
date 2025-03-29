@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life Countdown</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Life Countdown</h1>
+        
+        <div class="inputs">
+            <div class="input-group">
+                <label for="current-age">Current Age (years)</label>
+                <input type="number" id="current-age" min="0" max="120" value="30">
+            </div>
+            
+            <div class="input-group">
+                <label for="life-expectancy">Life Expectancy (years)</label>
+                <input type="number" id="life-expectancy" min="1" max="120" value="90">
+            </div>
+            
+            <div class="milestone-section">
+                <h3>Future Milestones</h3>
+                <div id="milestones-list"></div>
+                
+                <div class="add-milestone">
+                    <div class="input-group">
+                        <label for="milestone-label">Label</label>
+                        <input type="text" id="milestone-label" placeholder="e.g., Retirement">
+                    </div>
+                    <div class="input-group">
+                        <label for="milestone-age">Target Age</label>
+                        <input type="number" id="milestone-age" min="0" max="120">
+                    </div>
+                    <button id="add-milestone-btn">Add Milestone</button>
+                </div>
+            </div>
+            
+            <div class="view-options">
+                <h3>View Options</h3>
+                <div class="toggle-container">
+                    <button id="year-view-btn" class="view-btn active">Year View</button>
+                    <button id="week-view-btn" class="view-btn">Week View</button>
+                </div>
+            </div>
+            
+            <button id="update-btn">Update Visualization</button>
+            <button id="share-btn">Share Link</button>
+        </div>
+        
+        <div class="visualization">
+            <h2 id="visualization-title">Your Remaining Life</h2>
+            <div id="grid-container"></div>
+            <div id="legend"></div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
