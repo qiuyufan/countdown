@@ -8,8 +8,7 @@ const addMilestoneBtn = document.getElementById('add-milestone-btn');
 const milestonesList = document.getElementById('milestones-list');
 const yearViewBtn = document.getElementById('year-view-btn');
 const weekViewBtn = document.getElementById('week-view-btn');
-const updateBtn = document.getElementById('update-btn');
-const shareBtn = document.getElementById('share-btn');
+
 const gridContainer = document.getElementById('grid-container');
 const visualizationTitle = document.getElementById('visualization-title');
 const legend = document.getElementById('legend');
@@ -175,25 +174,14 @@ function addEventListeners() {
         generateVisualization();
     });
     
-    // Update button
-    updateBtn.addEventListener('click', () => {
+    // Update visualization when life expectancy changes
+    lifeExpectancyInput.addEventListener('change', () => {
         state.lifeExpectancy = parseInt(lifeExpectancyInput.value) || 90;
         generateVisualization();
         saveStateToUrl();
     });
     
-    // Share button
-    shareBtn.addEventListener('click', () => {
-        const url = saveStateToUrl();
-        navigator.clipboard.writeText(url)
-            .then(() => {
-                alert('Link copied to clipboard!');
-            })
-            .catch(err => {
-                console.error('Could not copy link: ', err);
-                alert('Could not copy link. Please copy the URL from your browser address bar.');
-            });
-    });
+
 }
 
 // Add a milestone

@@ -25,17 +25,17 @@ body {
     background-color: #072540;
     border-radius: 0;
     box-shadow: 0 0 0 4px #3e92cc, 0 0 0 8px #072540, 0 0 0 12px #2a628f;
-    padding: 30px;
+    padding: 15px;
     border: 2px solid #3e92cc;
     image-rendering: pixelated;
 }
 
 h1 {
     text-align: center;
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     color: #16db93;
     font-weight: 400;
-    font-size: 2rem;
+    font-size: 1.8rem;
     text-shadow: 3px 3px 0px #072540, 5px 5px 0px #3e92cc;
     letter-spacing: 2px;
 }
@@ -43,38 +43,51 @@ h1 {
 h2, h3 {
     color: #16db93;
     font-weight: 400;
-    margin-bottom: 15px;
+    margin-bottom: 6px;
     text-shadow: 2px 2px 0px #072540;
+    font-size: 1rem;
 }
 
 .inputs {
-    margin-bottom: 30px;
+    margin-bottom: 15px;
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 10px;
+}
+
+.basic-info-row {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.basic-info-row .input-group {
+    flex: 1;
+    min-width: 0;
 }
 
 .input-group {
     display: flex;
     flex-direction: column;
-    margin-bottom: 10px;
+    margin-bottom: 3px;
 }
 
 label {
-    margin-bottom: 10px;
-    font-size: 0.8rem;
+    margin-bottom: 3px;
+    font-size: 0.7rem;
     color: #a2d6f9;
     text-transform: uppercase;
     letter-spacing: 1px;
 }
 
 input {
-    padding: 10px;
+    padding: 4px 6px;
     border: 2px solid #3e92cc;
     background-color: #051c30;
     color: #e7ecef;
     border-radius: 0;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-family: 'Courier New', monospace;
 }
 
@@ -83,13 +96,13 @@ button {
     color: #e7ecef;
     border: none;
     border-radius: 0;
-    padding: 12px 15px;
+    padding: 6px 8px;
     cursor: pointer;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     transition: all 0.2s;
     text-transform: uppercase;
     letter-spacing: 1px;
-    box-shadow: 3px 3px 0px #072540;
+    box-shadow: 2px 2px 0px #072540;
     border: 2px solid #2a628f;
 }
 
@@ -106,31 +119,32 @@ button:active {
 
 .milestone-section {
     background-color: #051c30;
-    padding: 20px;
+    padding: 8px;
     border-radius: 0;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     border: 2px solid #3e92cc;
 }
 
 #milestones-list {
-    margin-bottom: 15px;
+    margin-bottom: 6px;
 }
 
 .milestone-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
+    padding: 4px 6px;
     background-color: #072540;
     border-radius: 0;
-    margin-bottom: 8px;
+    margin-bottom: 3px;
     border: 2px solid #2a628f;
+    font-size: 0.7rem;
 }
 
 .milestone-item button {
     background-color: #ef476f;
-    padding: 5px 10px;
-    font-size: 0.7rem;
+    padding: 3px 6px;
+    font-size: 0.6rem;
     border: 2px solid #d64161;
 }
 
@@ -141,23 +155,23 @@ button:active {
 .add-milestone {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 5px;
     align-items: flex-end;
 }
 
 .add-milestone .input-group {
     flex: 1;
-    min-width: 120px;
+    min-width: 100px;
     margin-bottom: 0;
 }
 
 .view-options {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 
 .toggle-container {
     display: flex;
-    gap: 10px;
+    gap: 5px;
 }
 
 .view-btn {
@@ -174,14 +188,14 @@ button:active {
 }
 
 .visualization {
-    margin-top: 30px;
+    margin-top: 20px;
 }
 
 #grid-container {
     display: grid;
-    gap: 4px;
-    margin-top: 20px;
-    margin-bottom: 20px;
+    gap: 3px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 
 /* Year view grid */
@@ -264,16 +278,16 @@ button:active {
 
 #legend {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     justify-content: center;
-    margin-top: 20px;
+    margin-top: 15px;
     flex-wrap: wrap;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     font-size: 0.8rem;
     color: #a2d6f9;
 }
@@ -288,7 +302,7 @@ button:active {
 /* Responsive design */
 @media (max-width: 768px) {
     .container {
-        padding: 15px;
+        padding: 10px;
     }
     
     h1 {
