@@ -1,4 +1,5 @@
 // DOM Elements
+const birthdateInput = document.getElementById('birthdate');
 const currentAgeInput = document.getElementById('current-age');
 const lifeExpectancyInput = document.getElementById('life-expectancy');
 const milestoneLabel = document.getElementById('milestone-label');
@@ -18,7 +19,8 @@ let state = {
     currentAge: 30,
     lifeExpectancy: 90,
     milestones: [],
-    viewMode: 'year' // 'year' or 'week'
+    viewMode: 'year', // 'year' or 'week'
+    birthdate: null // Will store the user's birthdate when provided
 };
 
 // Initialize the app
@@ -53,6 +55,11 @@ function init() {
 function loadStateFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     
+    if (urlParams.has('birthdate')) {
+        state.birthdate = urlParams.get('birthdate');
+        birthdateInput.value = state.birthdate;
+    }
+    
     if (urlParams.has('age')) {
         state.currentAge = parseInt(urlParams.get('age'));
     }
@@ -73,11 +80,59 @@ function loadStateFromUrl() {
             state.milestones = [];
         }
     }
+    
+    // Calculate current age if birthdate is provided
+    if (state.birthdate) {
+        calculateCurrentAge();
+    }
+}
+
+// Calculate current age based on birthdate
+function calculateCurrentAge() {
+    if (!state.birthdate) return;
+    
+    const birthDate = new Date(state.birthdate);
+    const today = new Date();
+    
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    
+    state.currentAge = age;
+    currentAgeInput.value = age;
+}
+
+// Calculate date from age
+function getDateFromAge(ageInYears, ageInWeeks = 0) {
+    if (!state.birthdate) return null;
+    
+    const birthDate = new Date(state.birthdate);
+    const resultDate = new Date(birthDate);
+    
+    resultDate.setFullYear(birthDate.getFullYear() + ageInYears);
+    resultDate.setDate(resultDate.getDate() + (ageInWeeks * 7));
+    
+    return resultDate;
+}
+
+// Format date to readable string
+function formatDate(date) {
+    if (!date) return '';
+    
+    const options = { year: 'numeric', month: 'short', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
 }
 
 // Save state to URL parameters
 function saveStateToUrl() {
     const urlParams = new URLSearchParams();
+    
+    if (state.birthdate) {
+        urlParams.set('birthdate', state.birthdate);
+    }
     
     urlParams.set('age', state.currentAge);
     urlParams.set('expectancy', state.lifeExpectancy);
@@ -94,6 +149,16 @@ function saveStateToUrl() {
 function addEventListeners() {
     // Add milestone button
     addMilestoneBtn.addEventListener('click', addMilestone);
+    
+    // Birthdate input
+    birthdateInput.addEventListener('change', () => {
+        if (birthdateInput.value) {
+            state.birthdate = birthdateInput.value;
+            calculateCurrentAge();
+            generateVisualization();
+            saveStateToUrl();
+        }
+    });
     
     // View mode buttons
     yearViewBtn.addEventListener('click', () => {
@@ -112,7 +177,6 @@ function addEventListeners() {
     
     // Update button
     updateBtn.addEventListener('click', () => {
-        state.currentAge = parseInt(currentAgeInput.value) || 0;
         state.lifeExpectancy = parseInt(lifeExpectancyInput.value) || 90;
         generateVisualization();
         saveStateToUrl();
@@ -224,19 +288,19 @@ function generateVisualization() {
     // Clear grid container
     gridContainer.innerHTML = '';
     
-    // Calculate remaining years/weeks
-    const remainingYears = state.lifeExpectancy - state.currentAge;
-    const remainingWeeks = remainingYears * 52;
+    // Calculate total years/weeks (including past and future)
+    const totalYears = state.lifeExpectancy;
+    const totalWeeks = totalYears * 52;
     
     // Set grid class based on view mode
     if (state.viewMode === 'year') {
         gridContainer.className = 'year-grid';
-        visualizationTitle.textContent = `Your Remaining ${remainingYears} Years`;
-        generateYearGrid(remainingYears);
+        visualizationTitle.textContent = `Your Life Timeline (${state.lifeExpectancy - state.currentAge} Years Remaining)`;
+        generateYearGrid(totalYears);
     } else {
         gridContainer.className = 'week-grid';
-        visualizationTitle.textContent = `Your Remaining ${remainingWeeks} Weeks`;
-        generateWeekGrid(remainingWeeks);
+        visualizationTitle.textContent = `Your Life Timeline (${(state.lifeExpectancy - state.currentAge) * 52} Weeks Remaining)`;
+        generateWeekGrid(totalWeeks);
     }
     
     // Generate legend
@@ -246,9 +310,29 @@ function generateVisualization() {
 // Generate year grid
 function generateYearGrid(years) {
     for (let i = 0; i < years; i++) {
-        const age = state.currentAge + i + 1;
+        const age = i + 1;
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
+        
+        // Mark past years (already lived)
+        if (age <= state.currentAge) {
+            gridItem.classList.add('past');
+        }
+        
+        // Mark current year
+        if (age === state.currentAge) {
+            gridItem.classList.add('current');
+        }
+        
+        // Calculate start and end dates for this year
+        let dateInfo = '';
+        if (state.birthdate) {
+            const yearStartDate = getDateFromAge(age - 1);
+            const yearEndDate = getDateFromAge(age);
+            yearEndDate.setDate(yearEndDate.getDate() - 1); // Subtract one day to get the end of the previous year
+            
+            dateInfo = `\n${formatDate(yearStartDate)} - ${formatDate(yearEndDate)}`;
+        }
         
         // Check if this year contains a milestone
         const milestone = state.milestones.find(m => m.age === age);
@@ -257,7 +341,7 @@ function generateYearGrid(years) {
             
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
-            tooltip.textContent = `${milestone.label} (Age ${milestone.age})`;
+            tooltip.textContent = `${milestone.label} (Age ${age})${dateInfo}`;
             
             gridItem.appendChild(tooltip);
         }
@@ -266,7 +350,7 @@ function generateYearGrid(years) {
         if (!milestone) {
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
-            tooltip.textContent = `Age ${age}`;
+            tooltip.textContent = `Age ${age}${dateInfo}`;
             
             gridItem.appendChild(tooltip);
         }
@@ -277,19 +361,42 @@ function generateYearGrid(years) {
 
 // Generate week grid
 function generateWeekGrid(weeks) {
+    // Calculate total weeks lived so far
+    const weeksLived = state.currentAge * 52;
+    
     for (let i = 0; i < weeks; i++) {
         const weekNumber = i + 1;
-        const currentWeekInYear = weekNumber % 52;
-        const yearsPassed = Math.floor(weekNumber / 52);
-        const age = state.currentAge + yearsPassed + (currentWeekInYear === 0 ? 0 : 1);
+        const currentWeekInYear = weekNumber % 52 || 52;
+        const yearsPassed = Math.floor((weekNumber - 1) / 52);
+        const age = yearsPassed + 1;
         
         const gridItem = document.createElement('div');
         gridItem.className = 'grid-item';
         
+        // Mark past weeks (already lived)
+        if (weekNumber <= weeksLived) {
+            gridItem.classList.add('past');
+        }
+        
+        // Mark current week
+        if (weekNumber > weeksLived - 1 && weekNumber <= weeksLived) {
+            gridItem.classList.add('current');
+        }
+        
+        // Calculate start and end dates for this week
+        let dateInfo = '';
+        if (state.birthdate) {
+            const weekStartDate = getDateFromAge(0, weekNumber - 1);
+            const weekEndDate = new Date(weekStartDate);
+            weekEndDate.setDate(weekStartDate.getDate() + 6); // Add 6 days to get the end of the week
+            
+            dateInfo = `\n${formatDate(weekStartDate)} - ${formatDate(weekEndDate)}`;
+        }
+        
         // Check if this week contains a milestone
         // For simplicity, we'll mark the first week of the milestone year
         const milestone = state.milestones.find(m => {
-            const milestoneWeek = (m.age - state.currentAge) * 52;
+            const milestoneWeek = m.age * 52 - 51;
             return weekNumber >= milestoneWeek && weekNumber < milestoneWeek + 1;
         });
         
@@ -298,7 +405,7 @@ function generateWeekGrid(weeks) {
             
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
-            tooltip.textContent = `${milestone.label} (Age ${milestone.age})`;
+            tooltip.textContent = `${milestone.label} (Age ${milestone.age})${dateInfo}`;
             
             gridItem.appendChild(tooltip);
         }
@@ -307,7 +414,7 @@ function generateWeekGrid(weeks) {
         if (!milestone) {
             const tooltip = document.createElement('div');
             tooltip.className = 'tooltip';
-            tooltip.textContent = `Age ${age}, Week ${currentWeekInYear || 52}`;
+            tooltip.textContent = `Age ${age}, Week ${currentWeekInYear}${dateInfo}`;
             
             gridItem.appendChild(tooltip);
         }
@@ -320,19 +427,51 @@ function generateWeekGrid(weeks) {
 function generateLegend() {
     legend.innerHTML = '';
     
-    // Regular item
-    const regularItem = document.createElement('div');
-    regularItem.className = 'legend-item';
+    // Past item
+    const pastItem = document.createElement('div');
+    pastItem.className = 'legend-item';
     
-    const regularColor = document.createElement('div');
-    regularColor.className = 'legend-color';
-    regularColor.style.backgroundColor = '#e9ecef';
+    const pastColor = document.createElement('div');
+    pastColor.className = 'legend-color';
+    pastColor.style.backgroundColor = '#16db93';
+    pastColor.style.opacity = '0.7';
+    pastColor.style.border = '2px solid #13b97c';
     
-    const regularLabel = document.createElement('span');
-    regularLabel.textContent = state.viewMode === 'year' ? 'Year' : 'Week';
+    const pastLabel = document.createElement('span');
+    pastLabel.textContent = 'Past';
     
-    regularItem.appendChild(regularColor);
-    regularItem.appendChild(regularLabel);
+    pastItem.appendChild(pastColor);
+    pastItem.appendChild(pastLabel);
+    
+    // Current item
+    const currentItem = document.createElement('div');
+    currentItem.className = 'legend-item';
+    
+    const currentColor = document.createElement('div');
+    currentColor.className = 'legend-color';
+    currentColor.style.backgroundColor = '#ffd166';
+    currentColor.style.border = '2px solid #e6bc5c';
+    
+    const currentLabel = document.createElement('span');
+    currentLabel.textContent = 'Current';
+    
+    currentItem.appendChild(currentColor);
+    currentItem.appendChild(currentLabel);
+    
+    // Future item
+    const futureItem = document.createElement('div');
+    futureItem.className = 'legend-item';
+    
+    const futureColor = document.createElement('div');
+    futureColor.className = 'legend-color';
+    futureColor.style.backgroundColor = '#051c30';
+    futureColor.style.border = '2px solid #2a628f';
+    
+    const futureLabel = document.createElement('span');
+    futureLabel.textContent = 'Future';
+    
+    futureItem.appendChild(futureColor);
+    futureItem.appendChild(futureLabel);
     
     // Milestone item
     const milestoneItem = document.createElement('div');
@@ -340,7 +479,8 @@ function generateLegend() {
     
     const milestoneColor = document.createElement('div');
     milestoneColor.className = 'legend-color';
-    milestoneColor.style.backgroundColor = '#4dabf7';
+    milestoneColor.style.backgroundColor = '#3e92cc';
+    milestoneColor.style.border = '2px solid #2a628f';
     
     const milestoneLabel = document.createElement('span');
     milestoneLabel.textContent = 'Milestone';
@@ -349,7 +489,9 @@ function generateLegend() {
     milestoneItem.appendChild(milestoneLabel);
     
     // Add to legend
-    legend.appendChild(regularItem);
+    legend.appendChild(pastItem);
+    legend.appendChild(currentItem);
+    legend.appendChild(futureItem);
     legend.appendChild(milestoneItem);
 }
 

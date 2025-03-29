@@ -2,37 +2,49 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    font-family: 'Press Start 2P', 'Courier New', monospace;
+    image-rendering: pixelated;
+}
+
+@font-face {
+    font-family: 'Press Start 2P';
+    src: url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 }
 
 body {
-    background-color: #f8f9fa;
-    color: #343a40;
+    background-color: #0a2463;
+    color: #e7ecef;
     line-height: 1.6;
     padding: 20px;
+    background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%230e307f' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
 }
 
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    background-color: #072540;
+    border-radius: 0;
+    box-shadow: 0 0 0 4px #3e92cc, 0 0 0 8px #072540, 0 0 0 12px #2a628f;
     padding: 30px;
+    border: 2px solid #3e92cc;
+    image-rendering: pixelated;
 }
 
 h1 {
     text-align: center;
     margin-bottom: 30px;
-    color: #495057;
-    font-weight: 300;
-    font-size: 2.5rem;
+    color: #16db93;
+    font-weight: 400;
+    font-size: 2rem;
+    text-shadow: 3px 3px 0px #072540, 5px 5px 0px #3e92cc;
+    letter-spacing: 2px;
 }
 
 h2, h3 {
-    color: #495057;
+    color: #16db93;
     font-weight: 400;
     margin-bottom: 15px;
+    text-shadow: 2px 2px 0px #072540;
 }
 
 .inputs {
@@ -49,38 +61,55 @@ h2, h3 {
 }
 
 label {
-    margin-bottom: 5px;
-    font-size: 0.9rem;
-    color: #6c757d;
+    margin-bottom: 10px;
+    font-size: 0.8rem;
+    color: #a2d6f9;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
 input {
     padding: 10px;
-    border: 1px solid #ced4da;
-    border-radius: 5px;
-    font-size: 1rem;
+    border: 2px solid #3e92cc;
+    background-color: #051c30;
+    color: #e7ecef;
+    border-radius: 0;
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
 }
 
 button {
-    background-color: #4dabf7;
-    color: white;
+    background-color: #3e92cc;
+    color: #e7ecef;
     border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
+    border-radius: 0;
+    padding: 12px 15px;
     cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s;
+    font-size: 0.8rem;
+    transition: all 0.2s;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    box-shadow: 3px 3px 0px #072540;
+    border: 2px solid #2a628f;
 }
 
 button:hover {
-    background-color: #339af0;
+    background-color: #2a628f;
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #072540;
+}
+
+button:active {
+    transform: translate(3px, 3px);
+    box-shadow: none;
 }
 
 .milestone-section {
-    background-color: #f1f3f5;
+    background-color: #051c30;
     padding: 20px;
-    border-radius: 8px;
+    border-radius: 0;
     margin-bottom: 20px;
+    border: 2px solid #3e92cc;
 }
 
 #milestones-list {
@@ -92,20 +121,21 @@ button:hover {
     justify-content: space-between;
     align-items: center;
     padding: 10px;
-    background-color: white;
-    border-radius: 5px;
+    background-color: #072540;
+    border-radius: 0;
     margin-bottom: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    border: 2px solid #2a628f;
 }
 
 .milestone-item button {
-    background-color: #fa5252;
+    background-color: #ef476f;
     padding: 5px 10px;
-    font-size: 0.8rem;
+    font-size: 0.7rem;
+    border: 2px solid #d64161;
 }
 
 .milestone-item button:hover {
-    background-color: #e03131;
+    background-color: #d64161;
 }
 
 .add-milestone {
@@ -132,13 +162,15 @@ button:hover {
 
 .view-btn {
     flex: 1;
-    background-color: #e9ecef;
-    color: #495057;
+    background-color: #051c30;
+    color: #a2d6f9;
+    border: 2px solid #2a628f;
 }
 
 .view-btn.active {
-    background-color: #4dabf7;
-    color: white;
+    background-color: #3e92cc;
+    color: #e7ecef;
+    border: 2px solid #2a628f;
 }
 
 .visualization {
@@ -164,29 +196,55 @@ button:hover {
 
 .grid-item {
     aspect-ratio: 1;
-    border-radius: 2px;
-    background-color: #e9ecef;
+    border-radius: 0;
+    background-color: #051c30;
     transition: transform 0.2s, box-shadow 0.2s;
     position: relative;
+    border: 2px solid #2a628f;
 }
 
 .grid-item:hover {
     transform: scale(1.1);
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 0 0 2px #3e92cc;
     z-index: 1;
 }
 
+.grid-item.past {
+    background-color: #16db93;
+    opacity: 0.7;
+    border: 2px solid #13b97c;
+}
+
+.grid-item.current {
+    background-color: #ffd166;
+    border: 2px solid #e6bc5c;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
 .milestone {
-    background-color: #4dabf7;
+    background-color: #3e92cc;
+    border: 2px solid #2a628f;
+}
+
+.milestone.past {
+    background-color: #a2d6f9;
+    opacity: 0.7;
+    border: 2px solid #8fc1e5;
 }
 
 .tooltip {
     position: absolute;
-    background-color: #343a40;
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px;
-    font-size: 0.8rem;
+    background-color: #072540;
+    color: #e7ecef;
+    padding: 8px 12px;
+    border-radius: 0;
+    font-size: 0.7rem;
     bottom: 120%;
     left: 50%;
     transform: translateX(-50%);
@@ -195,6 +253,8 @@ button:hover {
     opacity: 0;
     transition: opacity 0.2s;
     z-index: 10;
+    border: 2px solid #3e92cc;
+    box-shadow: 3px 3px 0px #051c30;
 }
 
 .grid-item:hover .tooltip {
@@ -207,20 +267,22 @@ button:hover {
     gap: 20px;
     justify-content: center;
     margin-top: 20px;
+    flex-wrap: wrap;
 }
 
 .legend-item {
     display: flex;
     align-items: center;
     gap: 5px;
-    font-size: 0.9rem;
-    color: #6c757d;
+    font-size: 0.8rem;
+    color: #a2d6f9;
 }
 
 .legend-color {
     width: 15px;
     height: 15px;
-    border-radius: 2px;
+    border-radius: 0;
+    border: 2px solid #2a628f;
 }
 
 /* Responsive design */
@@ -230,7 +292,7 @@ button:hover {
     }
     
     h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
     }
     
     .year-grid {
