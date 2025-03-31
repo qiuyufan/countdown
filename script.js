@@ -22,14 +22,47 @@ let state = {
     birthdate: null // Will store the user's birthdate when provided
 };
 
+// Local Storage Key
+const STORAGE_KEY = 'life-countdown-state';
+
+// Save state to localStorage
+function saveStateToLocalStorage() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+// Load state from localStorage
+function loadStateFromLocalStorage() {
+    const savedState = localStorage.getItem(STORAGE_KEY);
+    if (savedState) {
+        try {
+            const parsedState = JSON.parse(savedState);
+            // Update state with saved values
+            state = { ...state, ...parsedState };
+            return true;
+        } catch (e) {
+            console.error('Error parsing state from localStorage', e);
+            return false;
+        }
+    }
+    return false;
+}
+
 // Initialize the app
 function init() {
-    // Load state from URL if available
-    loadStateFromUrl();
+    // First try to load state from localStorage
+    const loadedFromStorage = loadStateFromLocalStorage();
+    
+    // If not found in localStorage, try URL parameters
+    if (!loadedFromStorage) {
+        loadStateFromUrl();
+    }
     
     // Set input values based on state
     currentAgeInput.value = state.currentAge;
     lifeExpectancyInput.value = state.lifeExpectancy;
+    if (state.birthdate) {
+        birthdateInput.value = state.birthdate;
+    }
     
     // Render milestones
     renderMilestones();
@@ -156,6 +189,7 @@ function addEventListeners() {
             calculateCurrentAge();
             generateVisualization();
             saveStateToUrl();
+            saveStateToLocalStorage();
         }
     });
     
@@ -165,6 +199,7 @@ function addEventListeners() {
         yearViewBtn.classList.add('active');
         weekViewBtn.classList.remove('active');
         generateVisualization();
+        saveStateToLocalStorage();
     });
     
     weekViewBtn.addEventListener('click', () => {
@@ -172,6 +207,7 @@ function addEventListeners() {
         weekViewBtn.classList.add('active');
         yearViewBtn.classList.remove('active');
         generateVisualization();
+        saveStateToLocalStorage();
     });
     
     // Update visualization when life expectancy changes
@@ -179,6 +215,7 @@ function addEventListeners() {
         state.lifeExpectancy = parseInt(lifeExpectancyInput.value) || 90;
         generateVisualization();
         saveStateToUrl();
+        saveStateToLocalStorage();
     });
     
 
@@ -223,8 +260,9 @@ function addMilestone() {
     // Update visualization
     generateVisualization();
     
-    // Save state to URL
+    // Save state to URL and localStorage
     saveStateToUrl();
+    saveStateToLocalStorage();
 }
 
 // Render milestones list
@@ -267,8 +305,9 @@ function deleteMilestone(id) {
     // Update visualization
     generateVisualization();
     
-    // Save state to URL
+    // Save state to URL and localStorage
     saveStateToUrl();
+    saveStateToLocalStorage();
 }
 
 // Generate visualization
